@@ -1,75 +1,138 @@
 const aws = require('aws-sdk');
+aws.config.update({
+    region: "us-east-2",
+});
 const dynamodb = new aws.DynamoDB({apiVersion: '2012-08-10'});
+const documentClient = new aws.DynamoDB.DocumentClient();
+
+const {v4: uuidv4} = require('uuid');
+
+const WORKOUT_TABLE_NAME = process.env.WORKOUT_TABLE_NAME
+const EXERCISE_TABLE_NAME = process.env.EXERCISE_TABLE_NAME
 
 
-exports.writeWorkoutsToDb = (workouts) => {
+exports.writeWorkoutsToDb = async (workouts) => {
+    console.log('Entered writeWorkoutsToDb');
+    try {
+        for (const workout of workouts) {
+            const workoutGuid = uuidv4()
+            const params = this.convertWorkoutToParams(workoutGuid, workout);
+            await dynamodb.putItem(params).promise();
+            for (const exercise of workout.exercises) {
+                const exerciseParams = this.convertExerciseToParams(workoutGuid, exercise);
+                await dynamodb.putItem(exerciseParams).promise();
+            }
+        }
+    } catch (ex) {
+        console.error(ex)
+        return "Problem input db stuff"
+    }
+}
+
+exports.getLatestWorkoutDate = async () => {
+    console.log('Entered get Latest workout date');
     const params = {
-        RequestItems: {
-            "Music": [
-                {
-                    PutRequest: {
-                        Item: {
-                            "AlbumTitle": {
-                                S: "Somewhat Famous"
-                            },
-                            "Artist": {
-                                S: "No One You Know"
-                            },
-                            "SongTitle": {
-                                S: "Call Me Today"
-                            }
-                        }
-                    }
-                },
-                {
-                    PutRequest: {
-                        Item: {
-                            "AlbumTitle": {
-                                S: "Songs About Life"
-                            },
-                            "Artist": {
-                                S: "Acme Band"
-                            },
-                            "SongTitle": {
-                                S: "Happy Day"
-                            }
-                        }
-                    }
-                },
-                {
-                    PutRequest: {
-                        Item: {
-                            "AlbumTitle": {
-                                S: "Blue Sky Blues"
-                            },
-                            "Artist": {
-                                S: "No One You Know"
-                            },
-                            "SongTitle": {
-                                S: "Scared of My Shadow"
-                            }
-                        }
-                    }
-                }
-            ]
+        TableName: WORKOUT_TABLE_NAME,
+        Key: {
+            'id': {S: 'cb27b394-38c8-484e-8145-518bdc7b1ec5'}
         }
     };
+    return dynamodb.getItem(params).promise();
+}
 
-    if(params != null){
-        const requiredBatchWrites = Math.ceil(workouts.length / 25);
-        console.log(requiredBatchWrites);
-        //batchWriteItem can only write up to 25 items at a time.
-        for(let i =0; i < requiredBatchWrites; i++){
-            dynamodb.batchWriteItem(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
-                else     console.log(data);           // successful response
-            });
-        }
+// Scan table for all items using the Document Client
+exports.scanForResultsDdbDc = async () => {
+    try {
+        let params = {
+            TableName: WORKOUT_TABLE_NAME
+        };
+        let result = await documentClient.scan(params).promise()
+        console.log(JSON.stringify(result))
+        return result
+    } catch (error) {
+        console.error(error);
     }
-    console.log('writeWorkoutsToDb called');
+}
+//TODO: make all these functions properties of the class, if js will let me
+this.convertWorkoutToParams = (guid, workout) => {
+    const itemParams = {
+        Item: {
+            "id": {
+                S: guid
+            },
+            "name": {
+                S: workout.name
+            },
+            "workoutDate": {
+                S: workout.workoutDate.toISOString()
+            },
+            "createdAt": {
+                S: new Date().toISOString()
+            },
+            "updatedAt": {
+                S: new Date().toISOString()
+            }
+        },
+        ReturnConsumedCapacity: "TOTAL",
+        TableName: WORKOUT_TABLE_NAME
+
+    }
+    if (workout.notes) {
+        itemParams.Item["workoutNotes"] = workout.notes
+    }
+
+    return itemParams
+};
+
+this.convertExerciseToParams = (workoutGuid, exercise) => {
+    const exerciseParams = {
+        Item: {
+            "id": {
+                S: uuidv4()
+            },
+            "workoutID": {
+                S: workoutGuid
+            },
+            "name": {
+                S: exercise.name
+            },
+            "exerciseDate": {
+                S: exercise.exerciseDate.toISOString()
+            },
+            "createdAt": {
+                S: new Date().toISOString()
+            },
+            "updatedAt": {
+                S: new Date().toISOString()
+            }
+        },
+        ReturnConsumedCapacity: "TOTAL",
+        TableName: EXERCISE_TABLE_NAME
+    }
+    if (exercise.isMuscleExercise)
+        this.addMuscleParams(exercise, exerciseParams)
+    else
+        this.addCardioParams(exercise, exerciseParams)
+    return exerciseParams;
 }
 
-exports.getLatestWorkoutDate = () => {
-    console.log('getLatestWorkoutDate called');
+this.addMuscleParams = (exercise, currentParams) => {
+    console.log("Muscle exercise going to params: %o", exercise)
+    if(exercise.weight)
+        currentParams.Item["weight"] = {N: exercise.weight.toString()}
+    if(exercise.weightUnit)
+        currentParams.Item["weightUnit"] = {S: exercise.weightUnit}
+    currentParams.Item["setOrder"] = {N: exercise.setOrder.toString()}
+    currentParams.Item["reps"] = {N: exercise.reps.toString()}
+    currentParams.Item["isMuscleExercise"] = {BOOL: true}
 }
 
+this.addCardioParams = (exercise, currentParams) => {
+    if (exercise.distance)
+        currentParams.Item["distance"] = {N: exercise.distance.toString()}
+    if (exercise.distanceUnit)
+        currentParams.Item["distanceUnit"] = {S: exercise.distanceUnit}
+    if (exercise.seconds)
+        currentParams.Item["seconds"] = {N: exercise.seconds.toString()}
+    currentParams.Item["isMuscleExercise"] = {BOOL: false}
+}

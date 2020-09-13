@@ -1,15 +1,13 @@
 const Papa = require('papaparse');
 
 exports.csvToJson = (filename, content) => {
-    console.log('Entered converter');
-
     const result = Papa.parse(content, {
         header: true,
         dynamicTyping: true,
         skipEmptyLines: true,
     })
     const data = result.data
-    if(data)
+    if (data)
         return data
 }
 
