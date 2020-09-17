@@ -6,7 +6,7 @@ const csvToJsonConverter = require('./csvConverter.js');
 const dynamodb = require('./dynamoDbFunctions.js');
 const processor = require('./workoutProcessor');
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
     const bucket = event.Records[0].s3.bucket.name;
     const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
     console.log('bucket: %o', bucket);
@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
 
     let returnedWorkout;
     try {
-        returnedWorkout = await dynamodb.scanForResultsDdbDc(); //TODO implement system that prevents us from processing too much already used data
+        returnedWorkout = await dynamodb.getLatestWorkoutDate(); //TODO implement system that prevents us from processing too much already used data
     } catch (ex) {
         console.error(ex)
         return "Error retrieving latest workout"

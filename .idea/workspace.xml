@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f23b9a4-f0ff-4acb-837f-91714c35582d" name="Default Changelist" comment="" />
+    <list default="true" id="0f23b9a4-f0ff-4acb-837f-91714c35582d" name="Default Changelist" comment="DynamoDb now seems to contain all the data from the csv. Still need to implement some form of date checking so we don't constantly reload data">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamoDbFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/dynamoDbFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +28,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1hAKMoElSbm2RauheUZbg6hBAwm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -63,11 +81,39 @@
       <workItem from="1599448413181" duration="2478000" />
       <workItem from="1599494280000" duration="9409000" />
       <workItem from="1599601691566" duration="39050000" />
+      <workItem from="1599960294066" duration="1445000" />
+      <workItem from="1600039492928" duration="2207000" />
+      <workItem from="1600279516651" duration="694000" />
+      <workItem from="1600367933968" duration="1514000" />
     </task>
+    <task id="LOCAL-00001" summary="DynamoDb now seems to contain all the data from the csv. Still need to implement some form of date checking so we don't constantly reload data">
+      <created>1599960541998</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1599960541998</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="DynamoDb now seems to contain all the data from the csv. Still need to implement some form of date checking so we don't constantly reload data" />
+    <option name="LAST_COMMIT_MESSAGE" value="DynamoDb now seems to contain all the data from the csv. Still need to implement some form of date checking so we don't constantly reload data" />
   </component>
   <component name="WindowStateProjectService">
     <state x="615" y="299" width="524" height="498" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1599949256109">
@@ -82,6 +128,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="743" y="278" width="424" height="482" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1080@0.0.1920.1040" timestamp="1599613035209" />
+    <state x="812" y="420" key="Github.ShareDialog" timestamp="1600369313004">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="812" y="420" key="Github.ShareDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600369313004" />
     <state width="1899" height="275" key="GridCell.Tab.0.bottom" timestamp="1599954839743">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -98,5 +148,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="275" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1080@0.0.1920.1040" timestamp="1599954839743" />
+    <state x="555" y="243" width="800" height="552" key="Vcs.Push.Dialog.v2" timestamp="1600369281051">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="555" y="243" width="800" height="552" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600369281051" />
   </component>
 </project>

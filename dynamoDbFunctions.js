@@ -9,6 +9,7 @@ const {v4: uuidv4} = require('uuid');
 
 const WORKOUT_TABLE_NAME = process.env.WORKOUT_TABLE_NAME
 const EXERCISE_TABLE_NAME = process.env.EXERCISE_TABLE_NAME
+const LAST_LOAD_TABLE_NAME = process.env.EXERCISE_TABLE_NAME
 
 
 exports.writeWorkoutsToDb = async (workouts) => {
@@ -31,13 +32,19 @@ exports.writeWorkoutsToDb = async (workouts) => {
 
 exports.getLatestWorkoutDate = async () => {
     console.log('Entered get Latest workout date');
-    const params = {
-        TableName: WORKOUT_TABLE_NAME,
-        Key: {
-            'id': {S: 'cb27b394-38c8-484e-8145-518bdc7b1ec5'}
+    try {
+        let params = {
+            TableName: LAST_LOAD_TABLE_NAME
+        };
+        let resultDate = await documentClient.scan(params).promise()
+        if(resultDate){
+            resultDate = new Date(result)
         }
-    };
-    return dynamodb.getItem(params).promise();
+        return resultDate
+    } catch (error) {
+        console.error(error);
+    }
+    return null
 }
 
 // Scan table for all items using the Document Client
